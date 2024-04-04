@@ -36,14 +36,16 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
   RETURN BOOLEAN IS
   DECLARE
     count NUMBER;
+    username Stud_Password.semail%TYPE;
+    password Stud_Password.spass%TYPE;
   BEGIN
     -- Prompt the user to enter username
-    DBMS_OUTPUT.PUT_LINE('Enter your username:');
-    &username VARCHAR2(100);
+    DBMS_OUTPUT.PUT_LINE('Enter your username(email):');
+    username := '&username';
 
     -- Prompt the user to enter password
     DBMS_OUTPUT.PUT_LINE('Enter your password:');
-    &password VARCHAR2(100);
+    password := '&password';
 
     -- Check if the provided username and password match any student record
     SELECT COUNT(*) INTO count
@@ -61,15 +63,29 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
 
   END student_login;
 
-  FUNCTION get_student_details 
-  RETURN SYS_REFCURSOR IS
-    cur SYS_REFCURSOR;
+  FUNCTION get_student_details_by_rollno
+  RETURN CURSOR IS
+  DECLARE
+    v_rollno Stud_Info.rollno%TYPE;
+    v_cur CURSOR;
   BEGIN
-    -- Implementation for getting student details
-    OPEN cur FOR
-    SELECT * FROM Student; -- Placeholder, replace with actual query
-    RETURN cur;
-  END get_student_details;
+    DBMS_OUTPUT.PUT_LINE('Enter Roll No. :');
+    v_rollno := '&v_rollno';
+
+    -- Open the cursor for the specified roll number
+    OPEN v_cur FOR
+      SELECT si.*, se.semail, sr.rm_no
+      FROM Stud_Info si
+      LEFT JOIN Stud_Email se ON si.rollno = se.rollno
+      LEFT JOIN Stud_Rooms sr ON si.rollno = sr.rollno
+      WHERE si.rollno = v_rollno;
+
+    RETURN v_cur;
+  EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An error occurred');
+        RETURN NULL;
+  END get_student_details_by_rollno;
 
   FUNCTION get_student_leave_details 
   RETURN SYS_REFCURSOR IS
