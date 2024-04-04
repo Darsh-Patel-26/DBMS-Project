@@ -1,4 +1,4 @@
--- Room Allocator Trigger
+-- 1. Room Allocator Trigger
 CREATE OR REPLACE TRIGGER room_allocator_trigger
 BEFORE INSERT ON Stud_Info
 FOR EACH ROW
@@ -25,7 +25,7 @@ BEGIN
 END;
 /
 
--- Entry-Exit Time and Date Noter
+-- 2. Entry-Exit Time and Date Noter
 CREATE OR REPLACE TRIGGER entry_exit_time_noter_trigger
 BEFORE INSERT ON Entry_Exit
 FOR EACH ROW
@@ -42,7 +42,7 @@ BEGIN
 END;
 /
 
--- Feedback Date Noter
+-- 3. Feedback Date Noter
 CREATE OR REPLACE TRIGGER feedback_date_noter_trigger
 BEFORE INSERT ON Feedback
 FOR EACH ROW
@@ -57,7 +57,7 @@ BEGIN
 END;
 /
 
--- Complain Date Noter
+-- 4. Complain Date Noter
 CREATE OR REPLACE TRIGGER complain_date_noter_trigger
 BEFORE INSERT ON Complain
 FOR EACH ROW
@@ -69,7 +69,7 @@ BEGIN
 END;
 /
 
--- Roll No Allocator
+-- 5. Roll No Allocator
 CREATE OR REPLACE TRIGGER student_before_insert
 BEFORE INSERT ON Stud_Info
 FOR EACH ROW
@@ -81,7 +81,7 @@ BEGIN
 END;
 /
 
--- Emp No Allocator
+-- 6. Emp No Allocator
 CREATE OR REPLACE TRIGGER employee_before_insert
 BEFORE INSERT ON Emp_Info
 FOR EACH ROW
