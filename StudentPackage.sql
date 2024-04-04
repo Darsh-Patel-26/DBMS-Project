@@ -34,9 +34,31 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
   -- Functions
   FUNCTION student_login 
   RETURN BOOLEAN IS
+  DECLARE
+    count NUMBER;
   BEGIN
-    -- Implementation for student login function
-    RETURN FALSE; -- Placeholder, replace with actual logic
+    -- Prompt the user to enter username
+    DBMS_OUTPUT.PUT_LINE('Enter your username:');
+    &username VARCHAR2(100);
+
+    -- Prompt the user to enter password
+    DBMS_OUTPUT.PUT_LINE('Enter your password:');
+    &password VARCHAR2(100);
+
+    -- Check if the provided username and password match any student record
+    SELECT COUNT(*) INTO count
+    FROM Student_Info
+    WHERE semail = '&username'
+    AND spass = '&password';
+
+    -- Return TRUE if a matching record is found, FALSE otherwise
+    RETURN count > 0;
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+      RETURN FALSE;
+
   END student_login;
 
   FUNCTION get_student_details 
