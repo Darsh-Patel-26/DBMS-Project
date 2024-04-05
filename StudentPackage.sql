@@ -158,12 +158,23 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
 
   FUNCTION get_complain_details 
   RETURN CURSOR IS
+  DECLARE
     cur CURSOR;
+    v_rollno Stud_Info.rollno%TYPE;
   BEGIN
     -- Implementation for getting complain details
+    DBMS_OUTPUT.PUT_LINE('Enter Roll No. :');
+    v_rollno := '&v_rollno';
+
     OPEN cur FOR
-    SELECT * FROM Complain; -- Placeholder, replace with actual query
+    SELECT * FROM Complain
+    WHERE rollno = v_rollno;
+
     RETURN cur;
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('An error occurred');
+      RETURN NULL;~
   END get_complain_details;
 
   -- Procedures
