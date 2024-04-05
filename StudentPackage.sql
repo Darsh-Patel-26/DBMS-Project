@@ -110,13 +110,29 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
   END get_student_leave_details;
 
   FUNCTION get_room_details 
-  RETURN SYS_REFCURSOR IS
-    cur SYS_REFCURSOR;
+  RETURN CURSOR IS
+  DECLARE
+    cur CURSOR;
+    v_rollno Stud_Info.rollno%TYPE;
+    v_rm_no Rooms.rm_no%TYPE;
   BEGIN
     -- Implementation for getting room details
+    DBMS_OUTPUT.PUT_LINE('Enter Roll No. :');
+    v_rollno := '&v_rollno';
+
+    SELECT rm_no INTO v_rm_no
+    FROM Stud_Rooms
+    WHERE rollno = v_rollno;
+
     OPEN cur FOR
-    SELECT * FROM Rooms; -- Placeholder, replace with actual query
+    SELECT * FROM Rooms
+    WHERE rm_no = v_rm_no;
     RETURN cur;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('An error occurred');
+      RETURN NULL;
   END get_room_details;
 
   FUNCTION get_feedback_details 
