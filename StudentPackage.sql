@@ -174,7 +174,7 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
   EXCEPTION
     WHEN OTHERS THEN
       DBMS_OUTPUT.PUT_LINE('An error occurred');
-      RETURN NULL;~
+      RETURN NULL;
   END get_complain_details;
 
   -- Procedures
