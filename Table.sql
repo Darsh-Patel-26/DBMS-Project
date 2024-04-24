@@ -16,6 +16,7 @@ CREATE TABLE Stud_Email (
     rollno VARCHAR2(20),
     semail VARCHAR2(100),
     CONSTRAINT fk_stud_email FOREIGN KEY (rollno) REFERENCES Stud_Info(rollno) ON DELETE CASCADE,
+    CONSTRAINT fk_stud_password FOREIGN KEY (semail) REFERENCES Stud_Password(semail) ON DELETE CASCADE,
     CONSTRAINT pk_stud_email PRIMARY KEY (rollno, semail)
 );
 
@@ -23,7 +24,6 @@ CREATE TABLE Stud_Email (
 CREATE TABLE Stud_Password (
     semail VARCHAR2(100),
     spass VARCHAR2(100),
-    CONSTRAINT fk_stud_password FOREIGN KEY (semail) REFERENCES Stud_Email(semail) ON DELETE CASCADE,
     CONSTRAINT pk_stud_password PRIMARY KEY (semail)
 );
 
@@ -45,16 +45,18 @@ CREATE TABLE Emp_Info (
     ephoneno VARCHAR2(20),
     eaddress VARCHAR2(200),
     gender VARCHAR2(10),
-    marital_st BOOLEAN,
+    marital_st CHAR(1),
     edob DATE,
     CONSTRAINT chk_ephoneno CHECK(LENGTH(ephoneno) = 10),
-    CONSTRAINT chk_gender CHECK(gender IN ('MALE', 'FEMALE', 'OTHERS'))
+    CONSTRAINT chk_gender CHECK(gender IN ('MALE', 'FEMALE', 'OTHERS')),
+    CONSTRAINT chk_marital_st CHECK(marital_st IN ('Y', 'N')) 
 );
 
 -- 6
 CREATE TABLE Emp_Email (
     empno VARCHAR2(20),
     e_email VARCHAR2(100),
+    CONSTRAINT fk_emp_password FOREIGN KEY (e_email) REFERENCES Emp_Email(e_email) ON DELETE CASCADE,
     CONSTRAINT fk_emp_email FOREIGN KEY (empno) REFERENCES Emp_Info(empno) ON DELETE CASCADE,
     CONSTRAINT pk_emp_email PRIMARY KEY (empno, e_email)
 );
@@ -63,7 +65,6 @@ CREATE TABLE Emp_Email (
 CREATE TABLE Emp_Password (
     e_email VARCHAR2(100),
     epass VARCHAR2(100),
-    CONSTRAINT fk_emp_password FOREIGN KEY (e_email) REFERENCES Emp_Email(e_email) ON DELETE CASCADE,
     CONSTRAINT pk_emp_password PRIMARY KEY (e_email)
 );
 
@@ -72,6 +73,7 @@ CREATE TABLE Emp_Job_Info (
     empno VARCHAR2(20),
     ejob VARCHAR2(100),
     CONSTRAINT fk_emp_job_info FOREIGN KEY (empno) REFERENCES Emp_Info(empno) ON DELETE CASCADE,
+    CONSTRAINT fk_emp_job FOREIGN KEY (ejob) REFERENCES Job(ejob) ON DELETE CASCADE,
     CONSTRAINT pk_emp_job_info PRIMARY KEY (empno)
 );
 
@@ -161,7 +163,6 @@ CREATE TABLE Rooms (
     rm_no VARCHAR2(20) PRIMARY KEY,
     capacity NUMBER,
     occupancy NUMBER
-    CONSTRAINT chk_occupancy CHECK(occupancy <= capacity)
 );
 
 -- Complain table
@@ -171,8 +172,9 @@ CREATE TABLE Complain (
     rollno VARCHAR2(20),
     com_dt DATE,
     com_type VARCHAR2(50),
-    is_done BOOLEAN,
+    is_done CHAR(1),
     CONSTRAINT fk_complain_rollno FOREIGN KEY (rollno) REFERENCES Stud_Info(rollno) ON DELETE CASCADE,
+    CONSTRAINT chk_isdone CHECK(is_done IN ('Y', 'N')),
     CONSTRAINT pk_complain PRIMARY KEY (rollno, com_dt)
 );
 
