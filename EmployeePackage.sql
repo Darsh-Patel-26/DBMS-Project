@@ -4,13 +4,13 @@ CREATE OR REPLACE PACKAGE employee_pkg AS
   RETURN BOOLEAN;
 
   FUNCTION get_employee_details 
-  RETURN SYS_REFCURSOR;
+  RETURN CURSOR;
 
   FUNCTION get_job_information 
-  RETURN SYS_REFCURSOR;
+  RETURN CURSOR;
 
   FUNCTION get_assigned_complaints 
-  RETURN SYS_REFCURSOR;
+  RETURN CURSOR;
 
   -- Procedures
   PROCEDURE new_employee_registration;

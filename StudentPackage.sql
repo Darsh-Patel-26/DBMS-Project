@@ -5,19 +5,19 @@ CREATE OR REPLACE PACKAGE student_pkg AS
   RETURN BOOLEAN;
 
   FUNCTION get_student_details 
-  RETURN SYS_REFCURSOR;
+  RETURN CURSOR;
 
   FUNCTION get_student_leave_details 
-  RETURN SYS_REFCURSOR;
+  RETURN CURSOR;
 
   FUNCTION get_room_details 
-  RETURN SYS_REFCURSOR;
+  RETURN CURSOR;
 
   FUNCTION get_feedback_details 
-  RETURN SYS_REFCURSOR;
+  RETURN CURSOR;
 
   FUNCTION get_complain_details 
-  RETURN SYS_REFCURSOR;
+  RETURN CURSOR;
 
   -- Procedures
   PROCEDURE new_student_registration;
