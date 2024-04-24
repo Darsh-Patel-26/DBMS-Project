@@ -1,4 +1,5 @@
 -- Student tables
+-- 1
 CREATE TABLE Stud_Info (
     rollno VARCHAR2(20) PRIMARY KEY,
     sname VARCHAR2(100),
@@ -9,6 +10,7 @@ CREATE TABLE Stud_Info (
     institute VARCHAR2(100)
 );
 
+-- 2
 CREATE TABLE Stud_Email (
     rollno VARCHAR2(20),
     semail VARCHAR2(100),
@@ -16,6 +18,7 @@ CREATE TABLE Stud_Email (
     CONSTRAINT pk_stud_email PRIMARY KEY (rollno, semail)
 );
 
+-- 3
 CREATE TABLE Stud_Password (
     semail VARCHAR2(100),
     spass VARCHAR2(100),
@@ -23,6 +26,7 @@ CREATE TABLE Stud_Password (
     CONSTRAINT pk_stud_password PRIMARY KEY (semail)
 );
 
+-- 4
 CREATE TABLE Stud_Rooms (
     rollno VARCHAR2(20),
     rm_no VARCHAR2(20),
@@ -32,6 +36,8 @@ CREATE TABLE Stud_Rooms (
 );
 
 -- Employee tables
+
+-- 5
 CREATE TABLE Emp_Info (
     empno VARCHAR2(20) PRIMARY KEY,
     ename VARCHAR2(100),
@@ -42,6 +48,7 @@ CREATE TABLE Emp_Info (
     edob DATE
 );
 
+-- 6
 CREATE TABLE Emp_Email (
     empno VARCHAR2(20),
     e_email VARCHAR2(100),
@@ -49,6 +56,7 @@ CREATE TABLE Emp_Email (
     CONSTRAINT pk_emp_email PRIMARY KEY (empno, e_email)
 );
 
+-- 7
 CREATE TABLE Emp_Password (
     e_email VARCHAR2(100),
     epass VARCHAR2(100),
@@ -56,6 +64,7 @@ CREATE TABLE Emp_Password (
     CONSTRAINT pk_emp_password PRIMARY KEY (e_email)
 );
 
+-- 8
 CREATE TABLE Emp_Job_Info (
     empno VARCHAR2(20),
     ejob VARCHAR2(100),
@@ -63,11 +72,13 @@ CREATE TABLE Emp_Job_Info (
     CONSTRAINT pk_emp_job_info PRIMARY KEY (empno)
 );
 
+-- 9
 CREATE TABLE Job (
     job_id VARCHAR2(20) PRIMARY KEY,
     sal NUMBER
 );
 
+-- 10
 CREATE TABLE Emp_Comp_Junc (
     rollno VARCHAR2(20),
     com_dt DATE,
@@ -78,6 +89,8 @@ CREATE TABLE Emp_Comp_Junc (
 );
 
 -- Vehicle table
+
+-- 11
 CREATE TABLE Vehicle (
     vl_id VARCHAR2(20) PRIMARY KEY,
     rollno VARCHAR2(20),
@@ -87,6 +100,8 @@ CREATE TABLE Vehicle (
 );
 
 -- Leave table
+
+-- 12
 CREATE TABLE Leave (
     rollno VARCHAR2(20),
     leave_dt DATE,
@@ -98,6 +113,8 @@ CREATE TABLE Leave (
 );
 
 -- Mess-Menu table
+
+-- 13
 CREATE TABLE Mess (
     mess_id VARCHAR2(20) PRIMARY KEY,
     monday VARCHAR2(100),
@@ -109,6 +126,7 @@ CREATE TABLE Mess (
     sunday VARCHAR2(100)
 );
 
+-- 14
 CREATE TABLE Mess_Fb_Junc (
     rollno VARCHAR2(20),
     fb_dt DATE,
@@ -119,6 +137,8 @@ CREATE TABLE Mess_Fb_Junc (
 );
 
 -- Feedback table
+
+-- 15
 CREATE TABLE Feedback (
     rollno VARCHAR2(20),
     fb_dt DATE,
@@ -129,6 +149,8 @@ CREATE TABLE Feedback (
 );
 
 -- Rooms table
+
+-- 16
 CREATE TABLE Rooms (
     rm_no VARCHAR2(20) PRIMARY KEY,
     capacity NUMBER,
@@ -136,6 +158,8 @@ CREATE TABLE Rooms (
 );
 
 -- Complain table
+
+-- 17
 CREATE TABLE Complain (
     rollno VARCHAR2(20),
     com_dt DATE,
@@ -146,6 +170,8 @@ CREATE TABLE Complain (
 );
 
 -- Entry-Exit table
+
+-- 18
 CREATE TABLE Entry_Exit (
     rollno VARCHAR2(20),
     ee_time VARCHAR2(20),
