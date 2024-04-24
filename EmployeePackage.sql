@@ -1,40 +1,41 @@
 CREATE OR REPLACE PACKAGE employee_pkg AS
   -- Functions
   FUNCTION employee_login (
-    username IN VARCHAR2,
-    password IN VARCHAR2
+    username IN Emp_Password.e_email%TYPE,
+    password IN Emp_Password.epass%TYPE
   ) RETURN BOOLEAN;
 
   FUNCTION get_employee_details (
-    p_empno IN VARCHAR2
+    p_empno IN Emp_Info.empno%TYPE
   ) RETURN CURSOR;
 
   FUNCTION get_job_information (
-    p_empno IN VARCHAR2
+    p_empno IN Emp_Info.empno%TYPE
   ) RETURN CURSOR;
 
   FUNCTION get_assigned_complaints (
-    p_empno IN VARCHAR2
+    p_empno IN Emp_Info.empno%TYPE
   ) RETURN CURSOR;
 
   -- Procedures
   PROCEDURE new_employee_registration (
-    p_empno    IN VARCHAR2,
-    p_ename    IN VARCHAR2,
-    p_ephoneno IN VARCHAR2,
-    p_eaddress IN VARCHAR2,
-    p_gender   IN VARCHAR2,
-    p_edob     IN DATE,
-    p_epass    IN VARCHAR2
+    p_ename    IN Emp_Info.ename%TYPE,
+    p_ephoneno IN Emp_Info.ephoneno%TYPE,
+    p_eaddress IN Emp_Info.eaddress%TYPE,
+    p_gender   IN Emp_Info.gender%TYPE,
+    p_m_st     IN Emp_Info.marital_st%TYPE,
+    p_edob     IN Emp_Info.edob%TYPE,
+    p_email    IN Emp_Password.e_email%TYPE,
+    p_epass    IN Emp_Password.epass%TYPE
   );
 
   PROCEDURE terminate_employee (
-    p_empno IN VARCHAR2
+    p_empno IN Emp_Info.empno%TYPE
   );
 
   PROCEDURE assign_job (
-    p_empno IN VARCHAR2,
-    p_ejob  IN VARCHAR2
+    p_empno IN Emp_Info.empno%TYPE,
+    p_ejob  IN Job.ejob%TYPE
   );
 
 END employee_pkg;
@@ -43,8 +44,8 @@ END employee_pkg;
 CREATE OR REPLACE PACKAGE BODY employee_pkg AS
   -- Functions
   FUNCTION employee_login (
-    username IN VARCHAR2,
-    password IN VARCHAR2
+    username IN Emp_Password.e_email%TYPE,
+    password IN Emp_Password.epass%TYPE
   ) RETURN BOOLEAN IS
     count NUMBER;
   BEGIN
@@ -62,7 +63,7 @@ CREATE OR REPLACE PACKAGE BODY employee_pkg AS
   END employee_login;
 
   FUNCTION get_employee_details (
-    p_empno IN VARCHAR2
+    p_empno IN Emp_Info.empno%TYPE
   ) RETURN CURSOR IS
     v_cur CURSOR;
   BEGIN
@@ -78,7 +79,7 @@ CREATE OR REPLACE PACKAGE BODY employee_pkg AS
   END get_employee_details;
 
   FUNCTION get_job_information (
-    p_empno IN VARCHAR2
+    p_empno IN Emp_Info.empno%TYPE
   ) RETURN CURSOR IS
     v_cur CURSOR;
   BEGIN
@@ -94,7 +95,7 @@ CREATE OR REPLACE PACKAGE BODY employee_pkg AS
   END get_job_information;
 
   FUNCTION get_assigned_complaints (
-    p_empno IN VARCHAR2
+    p_empno IN Emp_Info.empno%TYPE
   ) RETURN CURSOR IS
     v_cur CURSOR;
   BEGIN
@@ -111,16 +112,29 @@ CREATE OR REPLACE PACKAGE BODY employee_pkg AS
 
   -- Procedures
   PROCEDURE new_employee_registration (
-    p_ename    IN VARCHAR2,
-    p_ephoneno IN VARCHAR2,
-    p_eaddress IN VARCHAR2,
-    p_gender   IN VARCHAR2,
-    p_edob     IN DATE,
-    p_epass    IN VARCHAR2
+    p_ename    IN Emp_Info.ename%TYPE,
+    p_ephoneno IN Emp_Info.ephoneno%TYPE,
+    p_eaddress IN Emp_Info.eaddress%TYPE,
+    p_gender   IN Emp_Info.gender%TYPE,
+    p_m_st     IN Emp_Info.marital_st%TYPE,
+    p_edob     IN Emp_Info.edob%TYPE,
+    p_email    IN Emp_Password.e_email%TYPE,
+    p_epass    IN Emp_Password.epass%TYPE
   ) IS
+  DECLARE 
+    p_empno Emp_Info.empno%TYPE;
   BEGIN
-    INSERT INTO Emp_Info (ename, ephoneno, eaddress, gender, edob, epass)
-    VALUES (p_empno, p_ename, p_ephoneno, p_eaddress, p_gender, p_edob, p_epass);
+    INSERT INTO Emp_Info (ename, ephoneno, eaddress, gender, marital_st, edob)
+    VALUES (p_ename, p_ephoneno, p_eaddress, p_gender, p_m_st, p_edob);
+
+    SELECT empno INTO p_empno FROM
+    WHERE ephoneno = p_ephoneno;
+
+    INSERT INTO Emp_Email(empno, e_email) 
+    VALUES (p_empno, p_email);
+
+    INSERT INTO Emp_Password(e_email, epass) 
+    VALUES (p_email, p_epass);
 
     COMMIT;
   EXCEPTION
@@ -130,7 +144,7 @@ CREATE OR REPLACE PACKAGE BODY employee_pkg AS
   END new_employee_registration;
 
   PROCEDURE terminate_employee (
-    p_empno IN VARCHAR2
+    p_empno IN Emp_Info.empno%TYPE
   ) IS
   BEGIN
     DELETE FROM Emp_Info WHERE empno = p_empno;
@@ -142,8 +156,8 @@ CREATE OR REPLACE PACKAGE BODY employee_pkg AS
   END terminate_employee;
 
   PROCEDURE assign_job (
-    p_empno IN VARCHAR2,
-    p_ejob  IN VARCHAR2
+    p_empno IN Emp_Info.empno%TYPE,
+    p_ejob  IN Job.ejob%TYPE
   ) IS
   BEGIN
     INSERT INTO Emp_Job_Info (empno, ejob)
