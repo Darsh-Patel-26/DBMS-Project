@@ -74,10 +74,11 @@ CREATE OR REPLACE TRIGGER student_before_insert
 BEFORE INSERT ON Stud_Info
 FOR EACH ROW
 DECLARE
-    max_rollno NUMBER;
+    max_rollno Stud_Info.rollno%TYPE;
 BEGIN
-    SELECT NVL(MAX(rollno), 0) INTO max_rollno FROM Student;
-    :NEW.rollno := max_rollno + 1;
+    SELECT COUNT(*) INTO max_rollno FROM Stud_Info;
+    max_rollno := max_rollno + 1;
+    :NEW.rollno := 'STUD' || LPAD(TO_CHAR(max_rollno, 5, 0));
 END;
 /
 
@@ -86,9 +87,10 @@ CREATE OR REPLACE TRIGGER employee_before_insert
 BEFORE INSERT ON Emp_Info
 FOR EACH ROW
 DECLARE
-    max_empno NUMBER;
+    max_empno Emp_Info.empno%TYPE;
 BEGIN
-    SELECT NVL(MAX(empno), 0) INTO max_empno FROM Employee;
-    :NEW.empno := max_empno + 1;
+    SELECT COUNT(*) INTO max_empno FROM Emp_Info;
+    max_empno := max_empno + 1;
+    :NEW.empno := 'EMP' || LPAD(TO_CHAR(empno, 5, 0));
 END;
 /
