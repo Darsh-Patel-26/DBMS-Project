@@ -176,10 +176,37 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
 
   -- Procedures
 
-  PROCEDURE new_student_registration IS
+  PROCEDURE new_student_registration (
+    p_name      IN VARCHAR2,
+    p_email     IN VARCHAR2,
+    p_password  IN VARCHAR2,
+    p_dob       IN DATE,
+    p_address   IN VARCHAR2,
+    p_phone     IN VARCHAR2,
+    p_course    IN VARCHAR2,
+    p_insti     IN VARCHAR2
+  ) IS
+  DECLARE
+    p_roll Stud_Info.rollno%TYPE;
   BEGIN
-    -- Implementation for new student registration
-    NULL; -- Placeholder, replace with actual logic
+    INSERT INTO Student_Info (sname, sphoneno, saddress, sdob, course, institute)
+    VALUES (p_name, p_phone, p_address, p_dob, p_course, p_insti);
+
+    SELECT rollno into p_roll FROM Stud_Info
+    WHERE sphoneno = p_phone;
+
+    INSERT INTO Stud_Email(rollno, semail)
+    VALUES (p_roll, p_email);
+
+    INSERT INTO Stud_Password(semail, spass)
+    VALUES (p_email, p_password);
+
+    COMMIT; -- Commit the transaction
+    END IF;
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+      ROLLBACK; -- Rollback the transaction to maintain data consistency
   END new_student_registration;
 
   PROCEDURE cancel_admission (
