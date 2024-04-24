@@ -1,8 +1,8 @@
 -- Specification
 CREATE OR REPLACE PACKAGE student_pkg AS
   FUNCTION student_login (
-    username IN VARCHAR2,
-    password IN VARCHAR2
+    username IN Stud_Password.semail%TYPE,
+    password IN Stud_Password.spass%TYPE
   ) RETURN BOOLEAN;
 
   FUNCTION get_student_details (
@@ -26,29 +26,38 @@ CREATE OR REPLACE PACKAGE student_pkg AS
   ) RETURN CURSOR;
 
   -- Procedures
-  PROCEDURE new_student_registration;
+  PROCEDURE new_student_registration(
+    p_name      IN Stud_Info.sname%TYPE,
+    p_email     IN Stud_Password.semail%TYPE,
+    p_password  IN Stud_Password.spass%TYPE,
+    p_dob       IN Stud_Info.sdob%TYPE,
+    p_address   IN Stud_Info.saddress%TYPE,
+    p_phone     IN Stud_Info.sphoneno%TYPE,
+    p_course    IN Stud_Info.course%TYPE,
+    p_insti     IN Stud_Info.institute%TYPE
+  );
 
   PROCEDURE cancel_admission (
-    p_roll_number IN NUMBER
+    p_roll_number IN Stud_Info.rollno%TYPE
   );
 
   PROCEDURE lodge_complain (
-    p_rollno         IN VARCHAR2,
-    p_complaint_type IN VARCHAR2
+    p_rollno         IN Stud_Info.rollno%TYPE,
+    p_complaint_type IN Complain.com_type%TYPE
   );
 
   PROCEDURE submit_feedback (
-    p_rollno   IN VARCHAR2,
-    p_feedback IN VARCHAR2,
-    p_rating   IN NUMBER
+    p_rollno   IN Stud_Info.rollno%TYPE,
+    p_feedback IN Mess_Fb_Junc.feedback%TYPE,
+    p_rating   IN Mess_Fb_Junc.rating%TYPE
   );
 
   PROCEDURE apply_for_leave (
-    p_rollno      IN VARCHAR2,
-    p_leave_dt    IN DATE,
-    p_address     IN VARCHAR2,
-    p_reason      IN VARCHAR2,
-    p_no_of_day   IN NUM
+    p_rollno      IN Stud_Info.rollno%TYPE,
+    p_leave_dt    IN Leave.leave_dt%TYPE,
+    p_address     IN Leave.address%TYPE,
+    p_reason      IN Leave.reason%TYPE,
+    p_no_of_day   IN Leave.no_of_day%TYPE
   );
 END student_pkg;
 /
@@ -57,8 +66,8 @@ END student_pkg;
 CREATE OR REPLACE PACKAGE BODY student_pkg AS
   -- Functions
   FUNCTION student_login  (
-    username IN VARCHAR2,
-    password IN VARCHAR2
+    username IN Stud_Password.semail%TYPE,
+    password IN Stud_Password.spass%TYPE
   ) RETURN BOOLEAN IS
   DECLARE
     count NUMBER;
@@ -79,7 +88,7 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
 
   END student_login;
 
-  FUNCTION get_student_details_by_rollno (
+  FUNCTION get_student_details (
     v_rollno IN Stud_Info.rollno%TYPE
   ) RETURN CURSOR IS
   DECLARE
@@ -98,7 +107,7 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('An error occurred : ' || SQLERRM);
         RETURN NULL;
-  END get_student_details_by_rollno;
+  END get_student_details;
 
   FUNCTION get_student_leave_details (
     v_rollno IN Stud_Info.rollno%TYPE
@@ -177,14 +186,14 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
   -- Procedures
 
   PROCEDURE new_student_registration (
-    p_name      IN VARCHAR2,
-    p_email     IN VARCHAR2,
-    p_password  IN VARCHAR2,
-    p_dob       IN DATE,
-    p_address   IN VARCHAR2,
-    p_phone     IN VARCHAR2,
-    p_course    IN VARCHAR2,
-    p_insti     IN VARCHAR2
+    p_name      IN Stud_Info.sname%TYPE,
+    p_email     IN Stud_Password.semail%TYPE,
+    p_password  IN Stud_Password.spass%TYPE,
+    p_dob       IN Stud_Info.sdob%TYPE,
+    p_address   IN Stud_Info.saddress%TYPE,
+    p_phone     IN Stud_Info.sphoneno%TYPE,
+    p_course    IN Stud_Info.course%TYPE,
+    p_insti     IN Stud_Info.institute%TYPE
   ) IS
   DECLARE
     p_roll Stud_Info.rollno%TYPE;
@@ -210,8 +219,8 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
   END new_student_registration;
 
   PROCEDURE cancel_admission (
-    p_roll_number IN NUMBER
-    ) IS
+    p_roll_number IN Stud_Info.rollno%TYPE
+  ) IS
   BEGIN
     -- Attempt to delete the student from the student table
     DELETE FROM Stud_Info WHERE rollno = p_roll_number;
@@ -231,8 +240,8 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
   END cancel_admission;
 
   PROCEDURE lodge_complain (
-    p_rollno          IN VARCHAR2,
-    p_complaint_type  IN VARCHAR2
+    p_rollno         IN Stud_Info.rollno%TYPE,
+    p_complaint_type IN Complain.com_type%TYPE
   ) IS
     BEGIN
     -- Step 1: Input Validation (if necessary)
@@ -255,9 +264,9 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
   END lodge_complain;
 
   PROCEDURE submit_feedback (
-    p_rollno        IN VARCHAR2,
-    p_feedback      IN VARCHAR2,
-    p_rating IN NUMBER  -- Added parameter for feedback rating
+    p_rollno   IN Stud_Info.rollno%TYPE,
+    p_feedback IN Mess_Fb_Junc.feedback%TYPE,
+    p_rating   IN Mess_Fb_Junc.rating%TYPE
   ) IS
     BEGIN
       -- Step 1: Input Validation (if necessary)
@@ -281,11 +290,11 @@ CREATE OR REPLACE PACKAGE BODY student_pkg AS
   END submit_feedback;
 
   PROCEDURE apply_for_leave (
-    p_rollno        IN VARCHAR2,
-    p_leave_dt      IN DATE,
-    p_address       IN VARCHAR2,
-    p_reason        IN VARCHAR2,
-    p_no_of_day     IN NUMBER
+    p_rollno      IN Stud_Info.rollno%TYPE,
+    p_leave_dt    IN Leave.leave_dt%TYPE,
+    p_address     IN Leave.address%TYPE,
+    p_reason      IN Leave.reason%TYPE,
+    p_no_of_day   IN Leave.no_of_day%TYPE
   ) IS
     BEGIN
     -- Step 1: Input Validation (if necessary)
