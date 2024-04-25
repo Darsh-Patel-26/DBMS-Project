@@ -6,14 +6,14 @@ IS
 begin 
   -- Retrieve food from mess_id and day
   select 
-    case day_in
-      WHEN 'Monday' THEN monday
-      WHEN 'Tuesday' THEN tuesday
-      WHEN 'Wednesday' THEN wednesday
-      WHEN 'Thursday' THEN thursday
-      WHEN 'Friday' THEN friday
-      WHEN 'Saturday' THEN saturday
-      WHEN 'Sunday' THEN sunday
+    case upper(day_in)
+      WHEN 'MONDAY' THEN monday
+      WHEN 'TUESDAY' THEN tuesday
+      WHEN 'WEDNESDAY' THEN wednesday
+      WHEN 'THURSDAY' THEN thursday
+      WHEN 'FRIDAY' THEN friday
+      WHEN 'SATURDAY' THEN saturday
+      WHEN 'SUNDAY' THEN sunday
      
     END
   INTO food_menu

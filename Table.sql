@@ -80,7 +80,8 @@ CREATE TABLE Emp_Job_Info (
 -- 9
 CREATE TABLE Job (
     ejob VARCHAR2(20) PRIMARY KEY,
-    sal NUMBER
+    sal NUMBER,
+    CONSTRAINT chk_job CHECK(ejob IN ('MESS STAFF', 'SWEEPER', 'GARDENER', 'OFFICE STAFF'))
 );
 
 -- 10
