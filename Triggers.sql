@@ -103,15 +103,20 @@ DECLARE
 BEGIN
     -- Retrieve the employee number based on the complaint type
     SELECT empno INTO v_empno
-    FROM Emp_Job_Info
-    WHERE ejob = (
-        CASE :NEW.com_type
-            WHEN 'MESS' THEN 'MESS STAFF'
-            WHEN 'CLEANING' THEN 'SWEEPER'
-            WHEN 'GARDENING' THEN 'GARDENER'
-            ELSE 'OFFICE STAFF'
-        END
-    );
+    FROM (
+        SELECT empno
+        FROM Emp_Job_Info
+        WHERE ejob = (
+            CASE :NEW.com_type
+                WHEN 'MESS' THEN 'MESS STAFF'
+                WHEN 'CLEANING' THEN 'SWEEPER'
+                WHEN 'GARDENING' THEN 'GARDENER'
+                ELSE 'OFFICE STAFF'
+            END
+        )
+        ORDER BY DBMS_RANDOM.VALUE
+    )
+    WHERE ROWNUM = 1;
 
     -- Insert the complaint into the Emp_Comp_Junc table
     INSERT INTO Emp_Comp_Junc (rollno, com_dt, empno)
