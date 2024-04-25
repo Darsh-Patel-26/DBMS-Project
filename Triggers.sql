@@ -93,4 +93,39 @@ BEGIN
     max_empno := max_empno + 1;
     :NEW.empno := 'EMP' || LPAD(TO_CHAR(empno, 5, 0));
 END;
+
+-- 7. Complain Assigner
+CREATE OR REPLACE TRIGGER assign_complaint_to_employee
+AFTER INSERT ON Complain
+FOR EACH ROW
+DECLARE
+    v_empno Emp_Info.empno%TYPE;
+BEGIN
+    -- Retrieve the employee number based on the complaint type
+    SELECT empno INTO v_empno
+    FROM Emp_Job_Info
+    WHERE ejob = (
+        CASE :NEW.com_type
+            WHEN 'MESS' THEN 'MESS STAFF'
+            WHEN 'CLEANING' THEN 'SWEEPER'
+            WHEN 'GARDENING' THEN 'GARDENER'
+            ELSE 'OFFICE STAFF'
+        END
+    );
+
+    -- Insert the complaint into the Emp_Comp_Junc table
+    INSERT INTO Emp_Comp_Junc (rollno, com_dt, empno)
+    VALUES (:NEW.rollno, SYSDATE, v_empno);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        -- Handle the case where no employees are found for the given job role
+        INSERT INTO Complain (rollno, com_dt, com_type, is_done)
+        VALUES (:NEW.rollno, SYSDATE, :NEW.com_type, 'N');
+
+        -- You can log the error or take other appropriate actions
+        DBMS_OUTPUT.PUT_LINE('No employees found for the specified job role.');
+    WHEN OTHERS THEN
+        -- Handle other exceptions if needed
+        DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
 /
