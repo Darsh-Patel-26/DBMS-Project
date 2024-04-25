@@ -176,6 +176,7 @@ CREATE TABLE Complain (
     is_done CHAR(1),
     CONSTRAINT fk_complain_rollno FOREIGN KEY (rollno) REFERENCES Stud_Info(rollno) ON DELETE CASCADE,
     CONSTRAINT chk_isdone CHECK(is_done IN ('Y', 'N')),
+    CONSTRAINT chk_comtype CHECK(com_type IN ('MESS', 'CLEANING', 'GARDENING', 'OTHERS')),
     CONSTRAINT pk_complain PRIMARY KEY (rollno, com_dt)
 );
 
